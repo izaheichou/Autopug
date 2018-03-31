@@ -10,89 +10,111 @@ public class Overwatch implements GameTitle {
     private String mBio;
     private Map<String, Boolean> mRoles;  // DPS, Healer, Tank, Defense, Symmetra, Any
     private Map<String, Boolean> mModes;  // pick from Ranked, Casual, Arcade, Custom, Any
-    public enum RolesAndModes {
-        DPS(1), HEALER(2), TANK(3),
-        DEFENSE(4), SYMMETRA(5), ANYROLE(6),
-        RANKED(7), CASUAL(8), ARCADE(9), CUSTOM(10), ANYMODE(11);
+    private Map<String, Boolean> mPlatforms;  // PS4, PC, XBONE
+    public enum Ids {
+        DPS(1, "DPS"), HEALER(2, "Healer"), TANK(3, "Tank"),
+        DEFENSE(4, "Defense"), SYMMETRA(5, "Symmetra"), ANYROLE(6, "AnyRole"),
+        RANKED(7, "Ranked"), CASUAL(8, "Casual"), ARCADE(9, "Arcade"), CUSTOM(10, "Custom"),
+        ANYMODE(11, "AnyMode"), PS4(12, "PS4"), PC(13, "PC"), XBONE(14, "XBONE");
         private final int id;
-        RolesAndModes(int id) {
+        private final String name;
+        Ids(int id, String name) {
             this.id = id;
+            this.name = name;
         }
 
         public int getId() {
             return id;
         }
-    };
+        public String getName() {
+            return name;
+        }
+    }
 
     static public int assignIdToString(String s) {
-        if (s.equals("DPS")) {
-            return RolesAndModes.DPS.getId();
-        } else if (s.equals("Healer")) {
-            return RolesAndModes.HEALER.getId();
-        } else if (s.equals("Defense")) {
-            return RolesAndModes.DEFENSE.getId();
-        } else if (s.equals( "Tank")) {
-            return RolesAndModes.TANK.getId();
-        } else if (s.equals( "Symmetra")) {
-            return RolesAndModes.SYMMETRA.getId();
-        } else if (s.equals( "AnyRole")) {
-            return RolesAndModes.ANYROLE.getId();
-        } else if (s.equals( "Ranked")) {
-            return RolesAndModes.RANKED.getId();
-        } else if (s.equals( "Casual")) {
-            return RolesAndModes.CASUAL.getId();
-        } else if (s.equals( "Custom")) {
-            return RolesAndModes.CUSTOM.getId();
-        } else if (s.equals( "Arcade")) {
-            return RolesAndModes.ARCADE.getId();
-        } else {  // Any Mode
-            return RolesAndModes.ANYMODE.getId();
+        if (s.equals(Ids.DPS.getName())) {
+            return Ids.DPS.getId();
+        } else if (s.equals(Ids.HEALER.getName())) {
+            return Ids.HEALER.getId();
+        } else if (s.equals(Ids.DEFENSE.getName())) {
+            return Ids.DEFENSE.getId();
+        } else if (s.equals(Ids.TANK.getName())) {
+            return Ids.TANK.getId();
+        } else if (s.equals(Ids.SYMMETRA.getName())) {
+            return Ids.SYMMETRA.getId();
+        } else if (s.equals(Ids.ANYROLE.getName())) {
+            return Ids.ANYROLE.getId();
+        } else if (s.equals(Ids.RANKED.getName())) {
+            return Ids.RANKED.getId();
+        } else if (s.equals(Ids.CASUAL.getName())) {
+            return Ids.CASUAL.getId();
+        } else if (s.equals(Ids.CUSTOM.getName())) {
+            return Ids.CUSTOM.getId();
+        } else if (s.equals(Ids.ARCADE.getName())) {
+            return Ids.ARCADE.getId();
+        } else if (s.equals(Ids.ANYMODE.getName())) {  // Any Mode
+            return Ids.ANYMODE.getId();
+        } else if (s.equals(Ids.PS4.getName())) {  // Any Mode
+            return Ids.PS4.getId();
+        } else if (s.equals(Ids.PC.getName())) {  // Any Mode
+            return Ids.PC.getId();
+        } else if (s.equals(Ids.XBONE.getName())) {  // Any Mode
+            return Ids.XBONE.getId();
         }
+        return -1;
     }
 
     static public String idToString(int id) {
         switch (id) {
             case 1:
-                return "DPS";
+                return Ids.DPS.getName();
             case 2:
-                return "Healer";
+                return Ids.HEALER.getName();
             case 3:
-                return "Tank";
+                return Ids.TANK.getName();
             case 4:
-                return "Defense";
+                return Ids.DEFENSE.getName();
             case 5:
-                return "Symmetra";
+                return Ids.SYMMETRA.getName();
             case 6:
-                return "AnyRole";
+                return Ids.ANYROLE.getName();
             case 7:
-                return "Ranked";
+                return Ids.RANKED.getName();
             case 8:
-                return "Casual";
+                return Ids.CASUAL.getName();
             case 9:
-                return "Arcade";
+                return Ids.CUSTOM.getName();
             case 10:
-                return "Custom";
+                return Ids.ARCADE.getName();
             case 11:
-                return "AnyMode";
+                return Ids.ANYMODE.getName();
+            case 12: return Ids.PS4.getName();
+            case 13: return Ids.PC.getName();
+            case 14: return Ids.XBONE.getName();
             default: return "ERROR";
         }
     }
 
     public Overwatch() {
         mRoles = new HashMap<>();
-        mRoles.put("DPS", false);
-        mRoles.put("Healer", false);
-        mRoles.put("Tank", false);
-        mRoles.put("Defense", false);
-        mRoles.put("Symmetra", false);
-        mRoles.put("AnyRole", false);
+        mRoles.put(Ids.DPS.getName(), false);
+        mRoles.put(Ids.HEALER.getName(), false);
+        mRoles.put(Ids.TANK.getName(), false);
+        mRoles.put(Ids.DEFENSE.getName(), false);
+        mRoles.put(Ids.SYMMETRA.getName(), false);
+        mRoles.put(Ids.ANYROLE.getName(), false);
 
         mModes = new HashMap<>();
-        mModes.put("Ranked", false);
-        mModes.put("Casual", false);
-        mModes.put("Arcade", false);
-        mModes.put("Custom", false);
-        mModes.put("AnyMode", false);
+        mModes.put(Ids.RANKED.getName(), false);
+        mModes.put(Ids.CASUAL.getName(), false);
+        mModes.put(Ids.ARCADE.getName(), false);
+        mModes.put(Ids.CUSTOM.getName(), false);
+        mModes.put(Ids.ANYMODE.getName(), false);
+
+        mPlatforms = new HashMap<>();
+        mPlatforms.put(Ids.PS4.getName(), false);
+        mPlatforms.put(Ids.PC.getName(), false);
+        mPlatforms.put(Ids.XBONE.getName(), false);
 
         mBio = "";
     }
@@ -107,11 +129,6 @@ public class Overwatch implements GameTitle {
 
     public void setBio(String bio) {
         this.mBio = bio;
-    }
-
-    public void setRoles() {  // TODO: Figure out what param would be passed.
-        // Should this update the database?
-
     }
 
     public List<String> getRoles() {
@@ -135,18 +152,13 @@ public class Overwatch implements GameTitle {
         return roles;
     }
 
-    public void setModes() {  // TODO: Figure out what param would be passed.
-        // Should this update the database?
-
-    }
-
     public List<String> getModes() {
         List<String> modes = new ArrayList<String>();
         for (Map.Entry<String, Boolean> keyval : mModes.entrySet()) {
-            String role = keyval.getKey();
+            String mode = keyval.getKey();
             Boolean value = keyval.getValue();
             if (value) {
-                modes.add(role);
+                modes.add(mode);
             }
         }
         return modes;
@@ -161,11 +173,36 @@ public class Overwatch implements GameTitle {
         return modes;
     }
 
+    public List<String> getPlatforms() {
+        List<String> platforms = new ArrayList<String>();
+        for (Map.Entry<String, Boolean> keyval : mPlatforms.entrySet()) {
+            String platform = keyval.getKey();
+            Boolean value = keyval.getValue();
+            if (value) {
+                platforms.add(platform);
+            }
+        }
+        return platforms;
+    }
+
+    public List<String> getAllPlatforms() {
+        List<String> platforms = new ArrayList<String>();
+        for (Map.Entry<String, Boolean> keyval : mPlatforms.entrySet()) {
+            String platform = keyval.getKey();
+            platforms.add(platform);
+        }
+        return platforms;
+    }
+
     public void setRole(String role, Boolean val) {
         mRoles.put(role, val);
     }
 
     public void setMode(String mode, Boolean val) {
         mModes.put(mode, val);
+    }
+
+    public void setPlatform(String platform, Boolean val) {
+        mPlatforms.put(platform, val);
     }
 }
