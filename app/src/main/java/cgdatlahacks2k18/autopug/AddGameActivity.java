@@ -14,18 +14,23 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 public class AddGameActivity extends AppCompatActivity {
 
     private ArrayAdapter<CharSequence> gameArrayAdapter;
-
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_game);
 
+        mAuth = FirebaseAuth.getInstance();
         Spinner spinner = (Spinner) findViewById(R.id.gameslist_spinner);
         gameArrayAdapter = ArrayAdapter.createFromResource(this, R.array.games_masterlist, android.R.layout.simple_spinner_item);
         gameArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -131,7 +136,19 @@ public class AddGameActivity extends AppCompatActivity {
         // submitBtn.setId(69);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // TODO: update database, User class? add overwatch instance to their list of games
+                // TODO: User Class (may not be necessary)... Syncing future changes
+                String userId = mAuth.getCurrentUser().getUid();
+                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
+                        .child("users").child(userId).child("Games").child(overwatch.getName());
+                currentUserDb.child("Bio").setValue(bio.getText().toString());
+                List<String> playerRoles = overwatch.getRoles();
+                for (String role : playerRoles) {
+                    currentUserDb.child("Roles").push().setValue(role);
+                }
+                List<String> playerModes = overwatch.getModes();
+                for (String mode : playerModes) {
+                    currentUserDb.child("Modes").push().setValue(mode);
+                }
 
                 /* // TODO: go to next page
                 Intent intent = new Intent(AddGameActivity.this, MainActivity.class);  // TODO: finalize next page
