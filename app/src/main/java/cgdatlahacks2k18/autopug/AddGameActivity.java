@@ -2,12 +2,14 @@ package cgdatlahacks2k18.autopug;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,8 +57,26 @@ public class AddGameActivity extends AppCompatActivity {
         final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_add_game);
         final TextView roleLabel = new TextView(this);
         final TextView modeLabel = new TextView(this);
+        final TextView bioLabel = new TextView(this);
+
+        final EditText bio = new EditText(this);
+        bio.setHint("overwatch bio");
+        InputFilter[] fArray = new InputFilter[1];
+        fArray[0] = new InputFilter.LengthFilter(140);
+        bio.setFilters(fArray);
+
         roleLabel.setText("Select Role(s) You Play (You can change these anytime)");
         modeLabel.setText("Select Mode(s) You Play (You can change these anytime)");
+        bioLabel.setText("Overwatch Specific Bio (max 140 chars)");
+
+        layout.addView(bioLabel,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+        layout.addView(bio,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
 
         layout.addView(roleLabel,
                 new LinearLayout.LayoutParams(
