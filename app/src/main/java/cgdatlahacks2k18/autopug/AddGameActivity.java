@@ -54,7 +54,7 @@ public class AddGameActivity extends AppCompatActivity {
 
     }
 
-    private void generateOverwatchForm() {
+    private void generateOverwatchForm() {  // TODO: add platform! 
         Log.d("addgameactivity", "generate overwatch form called");
         final GameTitle overwatch = new Overwatch();
         // generate check boxes
