@@ -52,8 +52,8 @@ public class AddGameActivity extends AppCompatActivity {
         Log.d("addgameactivity", "generate overwatch form called");
         final GameTitle overwatch = new Overwatch();
         // generate check boxes
-        List<String> roles = overwatch.getRoles();
-        List<String> modes = overwatch.getModes();
+        List<String> roles = overwatch.getAllRoles();
+        List<String> modes = overwatch.getAllModes();
         final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_add_game);
         final TextView roleLabel = new TextView(this);
         final TextView modeLabel = new TextView(this);

@@ -8,8 +8,11 @@ public interface GameTitle {
     void setBio(String bio);
     void setRoles();
     List<String> getRoles();
+    List<String> getAllRoles();
     void setModes();
     List<String> getModes();
+    List<String> getAllModes();
     void setRole(String role, Boolean val);
     void setMode(String mode, Boolean val);
+
 }

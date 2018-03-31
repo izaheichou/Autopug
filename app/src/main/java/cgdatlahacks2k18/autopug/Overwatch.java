@@ -80,19 +80,19 @@ public class Overwatch implements GameTitle {
 
     public Overwatch() {
         mRoles = new HashMap<>();
-        mRoles.put("DPS", true);
-        mRoles.put("Healer", true);
-        mRoles.put("Tank", true);
-        mRoles.put("Defense", true);
-        mRoles.put("Symmetra", true);
-        mRoles.put("AnyRole", true);
+        mRoles.put("DPS", false);
+        mRoles.put("Healer", false);
+        mRoles.put("Tank", false);
+        mRoles.put("Defense", false);
+        mRoles.put("Symmetra", false);
+        mRoles.put("AnyRole", false);
 
         mModes = new HashMap<>();
-        mModes.put("Ranked", true);
-        mModes.put("Casual", true);
-        mModes.put("Arcade", true);
-        mModes.put("Custom", true);
-        mModes.put("AnyMode", true);
+        mModes.put("Ranked", false);
+        mModes.put("Casual", false);
+        mModes.put("Arcade", false);
+        mModes.put("Custom", false);
+        mModes.put("AnyMode", false);
 
         mBio = "";
     }
@@ -126,6 +126,15 @@ public class Overwatch implements GameTitle {
         return roles;
     }
 
+    public List<String> getAllRoles() {
+        List<String> roles = new ArrayList<String>();
+        for (Map.Entry<String, Boolean> keyval : mRoles.entrySet()) {
+            String role = keyval.getKey();
+            roles.add(role);
+        }
+        return roles;
+    }
+
     public void setModes() {  // TODO: Figure out what param would be passed.
         // Should this update the database?
 
@@ -139,6 +148,15 @@ public class Overwatch implements GameTitle {
             if (value) {
                 modes.add(role);
             }
+        }
+        return modes;
+    }
+
+    public List<String> getAllModes() {
+        List<String> modes = new ArrayList<String>();
+        for (Map.Entry<String, Boolean> keyval : mRoles.entrySet()) {
+            String mode = keyval.getKey();
+            modes.add(mode);
         }
         return modes;
     }
