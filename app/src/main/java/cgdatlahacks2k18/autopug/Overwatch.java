@@ -154,7 +154,7 @@ public class Overwatch implements GameTitle {
 
     public List<String> getAllModes() {
         List<String> modes = new ArrayList<String>();
-        for (Map.Entry<String, Boolean> keyval : mRoles.entrySet()) {
+        for (Map.Entry<String, Boolean> keyval : mModes.entrySet()) {
             String mode = keyval.getKey();
             modes.add(mode);
         }
