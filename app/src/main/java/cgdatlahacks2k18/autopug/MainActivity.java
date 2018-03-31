@@ -1,30 +1,36 @@
 package cgdatlahacks2k18.autopug;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> al;
     private ArrayAdapter<String> arrayAdapter;
     private int i;
-
-   // @InjectView(R.id.frame) SwipeFlingAdapterView flingContainer;
-
+    private List<GameTitle> mGameList;  // TODO: not sure if we need this here but leaving it here for now
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // ButterKnife.inject(this);
 
+        mAuth = FirebaseAuth.getInstance();
+
+        mGameList = new ArrayList<>();
+        mGameList.add(new Overwatch());
 
         al = new ArrayList<>();  // these are the cards
         al.add("php");
@@ -89,6 +95,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // TODO: still not sure how to deal with user class/data
+    /*public void GetUserInfo() {
+
+    }*/
+
+    public void logoutUser(View view) {
+        mAuth.signOut();
+        Intent intent = new Intent(MainActivity.this, ChooseLoginRegistrationActivity.class);
+        startActivity(intent);
+        finish();
+        return;
     }
 
 }

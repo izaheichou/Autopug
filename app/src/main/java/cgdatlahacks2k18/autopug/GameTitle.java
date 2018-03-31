@@ -10,4 +10,6 @@ public interface GameTitle {
     List<String> getRoles();
     void setModes();
     List<String> getModes();
+    void setRole(String role, Boolean val);
+    void setMode(String mode, Boolean val);
 }
