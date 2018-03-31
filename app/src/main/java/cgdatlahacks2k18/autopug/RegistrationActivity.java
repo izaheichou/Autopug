@@ -18,11 +18,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.sql.DatabaseMetaData;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private Button mRegister;
-    private EditText mEmail, mPassword;
+    private EditText mEmail, mPassword, mDisplayName;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
@@ -50,12 +54,17 @@ public class RegistrationActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         mPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        mDisplayName = (EditText) findViewById(R.id.displayname);
 
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
+                final String displayName = mDisplayName.getText().toString();
+                if (displayName == null) {
+                    Toast.makeText(RegistrationActivity.this, "please enter a display name", Toast.LENGTH_SHORT).show();
+                }
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -63,6 +72,11 @@ public class RegistrationActivity extends AppCompatActivity {
                             FirebaseException e = (FirebaseException)task.getException();
                             Toast.makeText(RegistrationActivity.this, "sign up error", Toast.LENGTH_SHORT).show();
                             Log.e("LoginActivity", "Failed Registration", e);  // TODO: detect errors such as weak password and notify user
+                        } else {
+                            String userId = mAuth.getCurrentUser().getUid();
+                            DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
+                                    .child("Users").child("displayName");
+                            currentUserDb.setValue(displayName);
                         }
                     }
                 });
