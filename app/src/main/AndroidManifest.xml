@@ -19,7 +19,8 @@
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".AddGameActivity" />
-        <activity android:name=".MatchesActivity"></activity>
+        <activity android:name=".MatchesActivity" />
+        <activity android:name=".PreferenceActivity"></activity>
     </application>
 
 </manifest>
