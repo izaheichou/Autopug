@@ -1,5 +1,6 @@
 package cgdatlahacks2k18.autopug;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -136,10 +137,10 @@ public class AddGameActivity extends AppCompatActivity {
         // submitBtn.setId(69);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // TODO: User Class (may not be necessary)... Syncing future changes
                 String userId = mAuth.getCurrentUser().getUid();
                 DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
                         .child("users").child(userId).child("Games").child(overwatch.getName());
+                currentUserDb.setValue(null);
                 currentUserDb.child("Bio").setValue(bio.getText().toString());
                 List<String> playerRoles = overwatch.getRoles();
                 for (String role : playerRoles) {
@@ -150,12 +151,11 @@ public class AddGameActivity extends AppCompatActivity {
                     currentUserDb.child("Modes").push().setValue(mode);
                 }
 
-                /* // TODO: go to next page
+                // TODO: go to next page
                 Intent intent = new Intent(AddGameActivity.this, MainActivity.class);  // TODO: finalize next page
-                    startActivity(intent);
-                    finish();
-                    return;
-                 */
+                startActivity(intent);
+                finish();
+                return;
             }
         });
         layout.addView(submitBtn,
