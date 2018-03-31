@@ -54,16 +54,18 @@ public class AddGameActivity extends AppCompatActivity {
 
     }
 
-    private void generateOverwatchForm() {  // TODO: add platform! 
+    private void generateOverwatchForm() {
         Log.d("addgameactivity", "generate overwatch form called");
         final GameTitle overwatch = new Overwatch();
         // generate check boxes
         List<String> roles = overwatch.getAllRoles();
         List<String> modes = overwatch.getAllModes();
+        List<String> platforms = overwatch.getAllPlatforms();
         final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_add_game);
         final TextView roleLabel = new TextView(this);
         final TextView modeLabel = new TextView(this);
         final TextView bioLabel = new TextView(this);
+        final TextView platformLabel = new TextView(this);
 
         final EditText bio = new EditText(this);
         bio.setHint("overwatch bio");
@@ -74,6 +76,7 @@ public class AddGameActivity extends AppCompatActivity {
         roleLabel.setText("Select Role(s) You Play (You can change these anytime)");
         modeLabel.setText("Select Mode(s) You Play (You can change these anytime)");
         bioLabel.setText("Overwatch Specific Bio (max 140 chars)");
+        platformLabel.setText("Select your platforms");
 
         layout.addView(bioLabel,
                 new LinearLayout.LayoutParams(
@@ -92,7 +95,6 @@ public class AddGameActivity extends AppCompatActivity {
         for (String role : roles) {
             final CheckBox rolebox = new CheckBox(this);
             rolebox.setId(Overwatch.assignIdToString(role));
-            // TODO: Layout params??
             rolebox.setText(role);
             rolebox.setOnClickListener(new View.OnClickListener() {
                 public void onClick (View view) {
@@ -115,8 +117,7 @@ public class AddGameActivity extends AppCompatActivity {
 
         for (String mode : modes) {
             final CheckBox modebox = new CheckBox(this);
-            modebox.setId(Overwatch.assignIdToString(mode));  // TODO: set this id, needs to be used on onclick
-            // TODO: Layout params??
+            modebox.setId(Overwatch.assignIdToString(mode));
             modebox.setText(mode);
             modebox.setOnClickListener(new View.OnClickListener() {
                 public void onClick (View view) {
@@ -127,6 +128,29 @@ public class AddGameActivity extends AppCompatActivity {
                 }
             });
             layout.addView(modebox,
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+
+        layout.addView(platformLabel,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        for (String platform : platforms) {
+            final CheckBox platbox = new CheckBox(this);
+            platbox.setId(Overwatch.assignIdToString(platform));
+            platbox.setText(platform);
+            platbox.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View view) {
+                    boolean checked = ((CheckBox) view).isChecked();
+
+                    String valueString = Overwatch.idToString(view.getId());
+                    overwatch.setPlatform(valueString, checked);
+                }
+            });
+            layout.addView(platbox,
                     new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -150,8 +174,11 @@ public class AddGameActivity extends AppCompatActivity {
                 for (String mode : playerModes) {
                     currentUserDb.child("Modes").push().setValue(mode);
                 }
+                List<String> playerPlatforms = overwatch.getPlatforms();
+                for (String platform : playerPlatforms) {
+                    currentUserDb.child("Platforms").push().setValue(platform);
+                }
 
-                // TODO: go to next page
                 Intent intent = new Intent(AddGameActivity.this, MainActivity.class);  // TODO: finalize next page
                 startActivity(intent);
                 finish();
