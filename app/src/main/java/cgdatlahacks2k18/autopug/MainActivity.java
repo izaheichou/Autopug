@@ -110,4 +110,11 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
+    public void setPreference(View view) {
+        Intent intent = new Intent(MainActivity.this, PreferenceActivity.class);
+        startActivity(intent);
+        finish();
+        return;
+    }
+
 }
