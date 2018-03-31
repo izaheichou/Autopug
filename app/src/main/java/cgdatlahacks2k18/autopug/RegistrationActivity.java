@@ -62,10 +62,10 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-                /*final String displayName = mDisplayName.getText().toString();
+                final String displayName = mDisplayName.getText().toString();
                 if (displayName == null) {
                     Toast.makeText(RegistrationActivity.this, "please enter a display name", Toast.LENGTH_SHORT).show();
-                }*/
+                }
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -73,12 +73,12 @@ public class RegistrationActivity extends AppCompatActivity {
                             FirebaseException e = (FirebaseException)task.getException();
                             Toast.makeText(RegistrationActivity.this, "sign up error", Toast.LENGTH_SHORT).show();
                             Log.e("LoginActivity", "Failed Registration", e);  // TODO: detect errors such as weak password and notify user
-                        } /*else {
+                        } else {
                             String userId = mAuth.getCurrentUser().getUid();
                             DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
-                                    .child("users").child("displayName");
+                                    .child("users").child(userId).child("displayName");
                             currentUserDb.setValue(displayName);
-                        }*/
+                        }
                     }
                 });
             }
