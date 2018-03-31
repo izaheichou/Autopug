@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1015625728626",
+    "firebase_url": "https://autopug-74f05.firebaseio.com",
+    "project_id": "autopug-74f05",
+    "storage_bucket": "autopug-74f05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015625728626:android:7aae2e516bf5d699",
+        "android_client_info": {
+          "package_name": "cgdatlahacks2k18.autopug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015625728626-bbml5h4hbmc9157u7l5sst1pk23gk9g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cgdatlahacks2k18.autopug",
+            "certificate_hash": "aa66faa907bec6c5bd9e62feb59f0cca7385208d"
+          }
+        },
+        {
+          "client_id": "1015625728626-6lbnhr74sv6795d2u95tb145h729839v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcszJ6j3DVXwmCF9Y8Qr7RHy2Piy1SLVI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015625728626-6lbnhr74sv6795d2u95tb145h729839v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
