@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cgdatlahacks2k18.autopug.MainActivity">
+    tools:context="cgdatlahacks2k18.autopug.MainActivity"
+    android:padding="15dp">
 
     <Button
         android:layout_width="match_parent"
@@ -19,6 +20,12 @@
         android:layout_height="wrap_content"
         android:onClick="goToMatches"
         android:text="Matches" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goToSettings"
+        android:text="Settings" />
 
     <Button
         android:layout_width="match_parent"
