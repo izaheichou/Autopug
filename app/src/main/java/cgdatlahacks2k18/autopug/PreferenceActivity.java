@@ -224,8 +224,6 @@ public class PreferenceActivity extends AppCompatActivity {
 
                             DatabaseReference currentUserGameDb = FirebaseDatabase.getInstance().getReference()
                                     .child("users").child(userId).child("Games").child(overwatch.getName());
-                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
-                            searchPoolDb.child("displayName").setValue(displayName);
                             // currentUserDb.setValue(null);
                             currentUserGameDb.child("Bio").setValue(bio.getText().toString());
                             searchPoolDb.child("Bio").setValue(bio.getText().toString());

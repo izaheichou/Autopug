@@ -160,10 +160,20 @@ public class MainActivity extends AppCompatActivity {
                         Boolean modeMatch = checkMode(user1preferredMode, user2preferredMode);
 
                         if (checkRoles && modeMatch && user1preferredPlatform.equals(user2platform)) {
-                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
-                            String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
-                            rowItems.add(new Card(dataSnapshot.getKey(), displayName, profileImageUrl));
-                            cardsArrayAdapter.notifyDataSetChanged();
+                            DatabaseReference otherUserDb = FirebaseDatabase.getInstance().getReference()
+                                    .child("users").child(dataSnapshot.getKey());
+                            otherUserDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                                    String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+                                    rowItems.add(new Card(dataSnapshot.getKey(), displayName, profileImageUrl));
+                                    cardsArrayAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) { }
+                            });
                         }
                     }
                 }

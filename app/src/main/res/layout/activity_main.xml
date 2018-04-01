@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="cgdatlahacks2k18.autopug.MainActivity"
-    android:padding="15dp">
+    android:padding="16dp">
 
     <Button
         android:layout_width="match_parent"
