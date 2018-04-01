@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 Card card = (Card) dataObject;
                 String userId = card.getUserId();
                 usersDb.child(userId).child("Connections").child("No").child(currentUid).setValue(true);
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 String userId = card.getUserId();
                 usersDb.child(userId).child("Connections").child("Yes").child(currentUid).setValue(true);
                 isConnectionMatch(userId);
-                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -161,7 +161,8 @@ public class MainActivity extends AppCompatActivity {
 
                         if (checkRoles && modeMatch && user1preferredPlatform.equals(user2platform)) {
                             String displayName = dataSnapshot.child("displayName").getValue(String.class);
-                            rowItems.add(new Card(dataSnapshot.getKey(), displayName));
+                            String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+                            rowItems.add(new Card(dataSnapshot.getKey(), displayName, profileImageUrl));
                             cardsArrayAdapter.notifyDataSetChanged();
                         }
                     }
