@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private int i;
     private List<GameTitle> mGameList;  // TODO: not sure if we need this here but leaving it here for now
     private FirebaseAuth mAuth;
+    //private HashMap<String, String> mCards = new HashMap<String, String>(); // User ID, User Bio
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +63,22 @@ public class MainActivity extends AppCompatActivity {
                 //You also have access to the original object.
                 //If you want to use it just cast it (String) dataObject
                 Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+                final String userId = mAuth.getCurrentUser().getUid();
+                String gameName = getIntent().getStringExtra("gameName");  // use this as search pool name
+                final DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
+                        .child("searchPool").child(gameName).child("Individuals");
+                // TODO: Figure out how to register connections
+
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {  // TODO
                 Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                final String userId = mAuth.getCurrentUser().getUid();
+                String gameName = getIntent().getStringExtra("gameName");  // use this as search pool name
+                final DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
+                        .child("searchPool").child(gameName).child("Individuals");
+                // TODO: Figure out how to register connections
             }
 
             @Override
@@ -129,10 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
                         Boolean modeMatch = checkMode(user1preferredMode, user2preferredMode);
 
-                        if (checkRoles && modeMatch &&
-                                user1preferredPlatform.equals(user2platform)) {
+                        if (checkRoles && modeMatch && user1preferredPlatform.equals(user2platform)) {
                             //mPotentialMatchUids.add(dataSnapshot.getKey());
                             mPotentialMatchUids.add(dataSnapshot.child("Bio").getValue().toString());
+                            //mCards.put(dataSnapshot.getKey().toString(), dataSnapshot.child("Bio").getValue().toString());
                             arrayAdapter.notifyDataSetChanged();
                         }
                     }
@@ -158,9 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
                         Boolean modeMatch = checkMode(user1preferredMode, user2preferredMode);
 
-                        if (checkRoles && modeMatch &&
-                                user1preferredPlatform.equals(user2platform)) {
-                            mPotentialMatchUids.add(dataSnapshot.getKey());
+                        if (checkRoles && modeMatch && user1preferredPlatform.equals(user2platform)) {
+                            //mPotentialMatchUids.add(dataSnapshot.getKey());
+                            mPotentialMatchUids.add(dataSnapshot.child("Bio").getValue().toString());
+                            //mCards.put(dataSnapshot.getKey().toString(), dataSnapshot.child("Bio").getValue().toString());
                             arrayAdapter.notifyDataSetChanged();
                         }
                     }

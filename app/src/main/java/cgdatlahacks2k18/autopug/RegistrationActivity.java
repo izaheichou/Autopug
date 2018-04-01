@@ -26,7 +26,7 @@ import java.sql.DatabaseMetaData;
 public class RegistrationActivity extends AppCompatActivity {
 
     private Button mRegister;
-    private EditText mEmail, mPassword, mDisplayName;
+    private EditText mEmail, mPassword, mDisplayName, mBattleTag;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
@@ -56,6 +56,7 @@ public class RegistrationActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.password);
         mPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         mDisplayName = (EditText) findViewById(R.id.displayname);
+        mBattleTag = (EditText) findViewById(R.id.battletag);
 
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +64,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
                 final String displayName = mDisplayName.getText().toString();
+                final String battleTag = mBattleTag.getText().toString();
                 if (displayName == null) {
                     Toast.makeText(RegistrationActivity.this, "please enter a display name", Toast.LENGTH_SHORT).show();
+                }
+                if (battleTag == null) {
+                    Toast.makeText(RegistrationActivity.this, "please enter a battle tag", Toast.LENGTH_SHORT).show();
                 }
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -78,6 +83,9 @@ public class RegistrationActivity extends AppCompatActivity {
                             DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
                                     .child("users").child(userId).child("displayName");
                             currentUserDb.setValue(displayName);
+                            currentUserDb = FirebaseDatabase.getInstance().getReference()
+                                    .child("users").child(userId).child("battleTag");
+                            currentUserDb.setValue(battleTag);
                         }
                     }
                 });
