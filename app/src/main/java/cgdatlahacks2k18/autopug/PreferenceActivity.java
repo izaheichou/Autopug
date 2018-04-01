@@ -83,6 +83,24 @@ public class PreferenceActivity extends AppCompatActivity {
         fArray[0] = new InputFilter.LengthFilter(140);
         bio.setFilters(fArray);
 
+        // populate bio field with previous bio
+        final String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference currentUserGameDb = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId).child("Games").child(overwatch.getName());
+        currentUserGameDb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String previousBio = dataSnapshot.child("Bio").getValue(String.class);
+                    Log.d("preferenceActivity", "setting previous bio");
+                    bio.setText(previousBio);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
         teamRoleLabel.setText("Select Team Mate(s) You Prefer");
         roleLabel.setText("Select Role(s) You Want Now");
         modeLabel.setText("Select Mode You Want Now");
