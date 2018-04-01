@@ -119,6 +119,20 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     Toast.makeText(MainActivity.this, "Match made!", Toast.LENGTH_LONG).show();
                     // TODO: I just realized this isn't game specific but we only have OW rn soooooo
+                    // TODO: create group/add to current group????
+                    // check if users -> uid -> Games -> Overwatch -> CurrentGroup -> groupId
+                    // is null or not
+                    // if it is null, check if other user's groupid is null
+                    // if BOTH null, create new group under Groups and assign group id to both
+                    // don't worry about party leader yet
+                    // - need to make sure groups ONLY get individuals!!!
+                    // individuals can swipe on groups AND indivs
+                    // if ONE of users has a team already,
+                    // FIRST CHECK if party is full -- if it is just notify user sorry, already filled and just ignore swipe?
+                    // add individual to team by assigning
+                    // their groupId as existing group's and adding user's id to groups -> groupid
+                    // if group full, remove from pool
+
                     usersDb.child(dataSnapshot.getKey()).child("Games").child("Overwatch").
                             child("Connections").child("Matches").child(currentUid).setValue(true);
                     usersDb.child(currentUid).child("Games").child("Overwatch").child("Connections")
