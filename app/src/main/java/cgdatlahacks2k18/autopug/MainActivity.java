@@ -5,31 +5,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> mPotentialMatchUids;
-    private ArrayAdapter<String> arrayAdapter;
+    // From tutorial
+    private Card cardsData[];  // TODO: remove if unnecessary
+    private CardsArrayAdapter cardsArrayAdapter;
+    ListView listView;
+    List<Card> rowItems;  //  This replaces mPotentialMatchUids
+
     private int i;
-    private List<GameTitle> mGameList;  // TODO: not sure if we need this here but leaving it here for now
     private FirebaseAuth mAuth;
-    //private HashMap<String, String> mCards = new HashMap<String, String>(); // User ID, User Bio
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,23 +37,19 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mGameList = new ArrayList<>();
-        mGameList.add(new Overwatch());
-
-        mPotentialMatchUids = new ArrayList<>();  // these are the cards
-
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.item, R.id.helloText, mPotentialMatchUids );
+        rowItems = new ArrayList<>();
+        cardsArrayAdapter = new CardsArrayAdapter(this, R.layout.item, rowItems);
 
         SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
 
-        flingContainer.setAdapter(arrayAdapter);
+        flingContainer.setAdapter(cardsArrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
                 Log.d("LIST", "removed object!");
-                mPotentialMatchUids.remove(0);
-                arrayAdapter.notifyDataSetChanged();
+                rowItems.remove(0);
+                cardsArrayAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -84,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {  // TODO
                 // Ask for more data here
-                mPotentialMatchUids.add("XML ".concat(String.valueOf(i)));
-                arrayAdapter.notifyDataSetChanged();
-                Log.d("LIST", "notified");
-                i++;
+                // mPotentialMatchUids.add("XML ".concat(String.valueOf(i)));
+//                cardsArrayAdapter.notifyDataSetChanged();
+//                Log.d("LIST", "notified");
+//                i++;
             }
 
             @Override
@@ -137,16 +132,13 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         String user2platform = dataSnapshot.child("platform").getValue(String.class);
-
                         Boolean checkRoles = checkMatch(user2Roles, user1TeamRoles);
-
                         Boolean modeMatch = checkMode(user1preferredMode, user2preferredMode);
 
                         if (checkRoles && modeMatch && user1preferredPlatform.equals(user2platform)) {
-                            //mPotentialMatchUids.add(dataSnapshot.getKey());
-                            mPotentialMatchUids.add(dataSnapshot.child("Bio").getValue().toString());
-                            //mCards.put(dataSnapshot.getKey().toString(), dataSnapshot.child("Bio").getValue().toString());
-                            arrayAdapter.notifyDataSetChanged();
+                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                            rowItems.add(new Card(dataSnapshot.getKey(), displayName));
+                            cardsArrayAdapter.notifyDataSetChanged();
                         }
                     }
                 }
@@ -155,30 +147,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d("onChildChanged", "is called!!!");
-                if (dataSnapshot.exists()) {
-                    if (!userId.equals(dataSnapshot.getKey())) {
-                        // TODO: check match, can implement score later
-                        List<String> user2Roles = new ArrayList<>();
-                        String user2preferredMode = dataSnapshot.child("preferredMode").getValue(String.class);
-
-                        for (DataSnapshot childSnapshot : dataSnapshot.child("roles").getChildren()) {
-                            user2Roles.add(childSnapshot.getValue(String.class));
-                        }
-
-                        String user2platform = dataSnapshot.child("platform").getValue(String.class);
-
-                        Boolean checkRoles = checkMatch(user2Roles, user1TeamRoles);
-
-                        Boolean modeMatch = checkMode(user1preferredMode, user2preferredMode);
-
-                        if (checkRoles && modeMatch && user1preferredPlatform.equals(user2platform)) {
-                            //mPotentialMatchUids.add(dataSnapshot.getKey());
-                            mPotentialMatchUids.add(dataSnapshot.child("Bio").getValue().toString());
-                            //mCards.put(dataSnapshot.getKey().toString(), dataSnapshot.child("Bio").getValue().toString());
-                            arrayAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
+                onChildAdded(dataSnapshot, s);
             }
 
             @Override
@@ -193,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO: Can use for both role and modes, just do normal string matching. Can add score later.
-    // TODO: ANY!!!
     public Boolean checkMatch(List<String> user1Info, List<String> user2Preferences) {
         if (user1Info.isEmpty() || user2Preferences.isEmpty()) {
             Log.d("checkMatch", "empty!!!!!!!");

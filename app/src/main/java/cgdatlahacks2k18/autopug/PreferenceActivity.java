@@ -18,8 +18,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,40 +191,57 @@ public class PreferenceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 int platformId = platformGroup.getCheckedRadioButtonId();
                 int modeId = modeGroup.getCheckedRadioButtonId();
-                String playerPlatform = Overwatch.idToString(platformId);
-                String playerMode = Overwatch.idToString(modeId);
-                String userId = mAuth.getCurrentUser().getUid();
-                DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
-                        .child("searchPool").child(overwatch.getName()).child("Individuals").child(userId);
+                final String playerPlatform = Overwatch.idToString(platformId);
+                final String playerMode = Overwatch.idToString(modeId);
+                final String userId = mAuth.getCurrentUser().getUid();
 
                 DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
-                        .child("users").child(userId).child("Games").child(overwatch.getName());
-                // currentUserDb.setValue(null);
-                currentUserDb.child("Bio").setValue(bio.getText().toString());
-                searchPoolDb.child("Bio").setValue(bio.getText().toString());
+                        .child("users").child(userId);
+                currentUserDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
+                                    .child("searchPool").child(overwatch.getName()).child("Individuals").child(userId);
 
-                // searchPoolDb.setValue(null);
-                List<String> playerRoles = overwatch.getRoles();
-                searchPoolDb.child("roles").setValue(null);
-                for (String role : playerRoles) {
-                    searchPoolDb.child("roles").push().setValue(role);
-                }
-                List<String> teamRoles = overwatchTeam.getRoles();
-                searchPoolDb.child("teamRoles").setValue(null);
-                for (String role : teamRoles) {
-                    searchPoolDb.child("teamRoles").push().setValue(role);
-                }
-                searchPoolDb.child("preferredMode").setValue(playerMode);
-                searchPoolDb.child("platform").setValue(playerPlatform);
+                            DatabaseReference currentUserGameDb = FirebaseDatabase.getInstance().getReference()
+                                    .child("users").child(userId).child("Games").child(overwatch.getName());
+                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                            searchPoolDb.child("displayName").setValue(displayName);
+                            // currentUserDb.setValue(null);
+                            currentUserGameDb.child("Bio").setValue(bio.getText().toString());
+                            searchPoolDb.child("Bio").setValue(bio.getText().toString());
 
-                Intent intent = new Intent(PreferenceActivity.this, MainActivity.class);  // TODO: finalize next page
-                intent.putExtra("gameName", overwatch.getName());
-                intent.putExtra("user1Platform", playerPlatform);
-                intent.putStringArrayListExtra("user1TeamRoles", (ArrayList<String>) teamRoles);
-                intent.putExtra("user1Mode", playerMode);
-                startActivity(intent);
-                finish();
-                return;
+                            // searchPoolDb.setValue(null);
+                            List<String> playerRoles = overwatch.getRoles();
+                            searchPoolDb.child("roles").setValue(null);
+                            for (String role : playerRoles) {
+                                searchPoolDb.child("roles").push().setValue(role);
+                            }
+                            List<String> teamRoles = overwatchTeam.getRoles();
+                            searchPoolDb.child("teamRoles").setValue(null);
+                            for (String role : teamRoles) {
+                                searchPoolDb.child("teamRoles").push().setValue(role);
+                            }
+                            searchPoolDb.child("preferredMode").setValue(playerMode);
+                            searchPoolDb.child("platform").setValue(playerPlatform);
+
+                            Intent intent = new Intent(PreferenceActivity.this, MainActivity.class);
+                            intent.putExtra("gameName", overwatch.getName());
+                            intent.putExtra("user1Platform", playerPlatform);
+                            intent.putStringArrayListExtra("user1TeamRoles", (ArrayList<String>) teamRoles);
+                            intent.putExtra("user1Mode", playerMode);
+                            startActivity(intent);
+                            finish();
+                            return;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
         layout.addView(submitBtn,
