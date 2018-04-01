@@ -217,6 +217,12 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
+    public void goToMatches(View view) {
+        Intent intent = new Intent(MainActivity.this, MatchesActivity.class);
+        startActivity(intent);
+        return;
+    }
+
     public void setPreference(View view) {
         Intent intent = new Intent(MainActivity.this, PreferenceActivity.class);
         startActivity(intent);
