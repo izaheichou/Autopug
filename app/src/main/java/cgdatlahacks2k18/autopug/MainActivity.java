@@ -291,6 +291,12 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
+    public void goToGroup(View view) {
+        Intent intent = new Intent(MainActivity.this, ManageGroupActivity.class);
+        startActivity(intent);
+        return;
+    }
+
     public void setPreference(View view) {
         Intent intent = new Intent(MainActivity.this, PreferenceActivity.class);
         startActivity(intent);
