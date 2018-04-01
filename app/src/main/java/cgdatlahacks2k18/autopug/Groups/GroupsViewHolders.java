@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cgdatlahacks2k18.autopug.R;
 
@@ -24,6 +25,7 @@ public class GroupsViewHolders extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View view) {
         // TODO
+        Toast.makeText(view.getContext(), "you clicked a group member", Toast.LENGTH_SHORT).show();
     }
 
 }
