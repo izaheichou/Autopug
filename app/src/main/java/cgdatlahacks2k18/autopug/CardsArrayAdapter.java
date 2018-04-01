@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class CardsArrayAdapter extends ArrayAdapter {
@@ -24,9 +26,19 @@ public class CardsArrayAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
         }
         TextView name = (TextView) convertView.findViewById(R.id.name);
+        TextView mode = (TextView) convertView.findViewById(R.id.mode);
+        TextView roles = (TextView) convertView.findViewById(R.id.roles);
+        TextView teamRoles = (TextView) convertView.findViewById(R.id.teamRoles);
+        TextView platform = (TextView) convertView.findViewById(R.id.platform);
+        TextView bio = (TextView) convertView.findViewById(R.id.bio);
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
 
         name.setText(cardItem.getName());
+        mode.setText(cardItem.getMode());
+        roles.setText("Their role(s): " + cardItem.getRolesAsString());
+        teamRoles.setText("Looking for: " + cardItem.getTeamRolesAsString());
+        platform.setText(cardItem.getPlatform());
+        bio.setText("Bio: " + cardItem.getBio());
 
         switch (cardItem.getProfileImageUrl()) {
             case "default":

@@ -21,27 +21,72 @@
         android:id="@+id/cardviewItem">
         <LinearLayout
             android:layout_width="300dp"
-            android:layout_height="350dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 android:id="@+id/image"
                 android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/name"
-                android:textSize="30sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:paddingLeft="20sp"
+                android:textColor="@android:color/black"
+                android:textSize="25sp"
+                tools:text="hello" />
+
+            <TextView
+                android:id="@+id/bio"
+                android:textSize="20sp"
                 android:paddingLeft="20sp"
                 android:textColor="@android:color/black"
                 android:gravity="center|left"
-                tools:text="hello"
+                tools:text="bio"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!-- TODO: display roles, teamroles, mode, platform -->
+            <TextView
+                android:id="@+id/roles"
+                android:textSize="20sp"
+                android:paddingLeft="20sp"
+                android:textColor="@android:color/black"
+                android:gravity="center|left"
+                tools:text="roles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/teamRoles"
+                android:textSize="20sp"
+                android:paddingLeft="20sp"
+                android:textColor="@android:color/black"
+                android:gravity="center|left"
+                tools:text="teamRoles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/mode"
+                android:textSize="20sp"
+                android:paddingLeft="20sp"
+                android:textColor="@android:color/black"
+                android:gravity="center|left"
+                tools:text="mode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/platform"
+                android:textSize="20sp"
+                android:paddingLeft="20sp"
+                android:textColor="@android:color/black"
+                android:gravity="center|left"
+                tools:text="platform"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
         </LinearLayout>

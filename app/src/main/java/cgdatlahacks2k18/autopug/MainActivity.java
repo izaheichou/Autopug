@@ -146,14 +146,19 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     if (!userId.equals(dataSnapshot.getKey())) {
                         // TODO: check match, can implement score later
-                        List<String> user2Roles = new ArrayList<>();
-                        String user2preferredMode = dataSnapshot.child("preferredMode").getValue(String.class);
+                        final List<String> user2Roles = new ArrayList<>();
+                        final List<String> user2TeamRoles = new ArrayList<>();
+                        final String user2preferredMode = dataSnapshot.child("preferredMode").getValue(String.class);
+                        final String user2bio = dataSnapshot.child("Bio").getValue(String.class);
 
                         for (DataSnapshot childSnapshot : dataSnapshot.child("roles").getChildren()) {
                             user2Roles.add(childSnapshot.getValue(String.class));
                         }
+                        for (DataSnapshot childSnapshot : dataSnapshot.child("teamRoles").getChildren()) {
+                            user2TeamRoles.add(childSnapshot.getValue(String.class));
+                        }
 
-                        String user2platform = dataSnapshot.child("platform").getValue(String.class);
+                        final String user2platform = dataSnapshot.child("platform").getValue(String.class);
                         Boolean checkRoles = checkMatch(user2Roles, user1TeamRoles);
                         Boolean modeMatch = checkMode(user1preferredMode, user2preferredMode);
 
@@ -172,7 +177,9 @@ public class MainActivity extends AppCompatActivity {
                                         if (!profileImageUrl.equals(existingProfileImageUrl)) {
                                             profileImageUrl = existingProfileImageUrl;
                                         }
-                                        rowItems.add(new Card(dataSnapshot.getKey(), displayName, profileImageUrl));
+                                        rowItems.add(new Card(dataSnapshot.getKey(), displayName,
+                                                profileImageUrl, user2preferredMode,
+                                                user2platform, user2bio,user2Roles, user2TeamRoles));
                                         cardsArrayAdapter.notifyDataSetChanged();
                                     }
                                 }
