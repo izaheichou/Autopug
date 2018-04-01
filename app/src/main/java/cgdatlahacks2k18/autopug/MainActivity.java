@@ -9,12 +9,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 Card card = (Card) dataObject;
                 String userId = card.getUserId();
                 usersDb.child(userId).child("Connections").child("Yes").child(currentUid).setValue(true);
+                isConnectionMatch(userId);
                 Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 
@@ -102,6 +103,28 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getStringExtra("gameName") != null) {
             GetPotentialMatches();
         }
+    }
+
+    private void isConnectionMatch(String userId) {  // userId is the one tied to the CARD
+        // Check currentUser's connections - if userId exists under Connections - Yes
+        DatabaseReference currentUserConnectionsDb = usersDb.child(currentUid).child("Connections")
+                .child("Yes").child(userId);
+        currentUserConnectionsDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {  // Create/update Matches children
+                // snapshot is Yes branch for CURRENT USER, whoever just swiped right i guess?
+                if (dataSnapshot.exists()) {
+                    Toast.makeText(MainActivity.this, "Match made!", Toast.LENGTH_LONG).show();
+                    usersDb.child(dataSnapshot.getKey()).child("Connections").child("Matches").child(currentUid).setValue(true);
+                    usersDb.child(currentUid).child("Connections").child("Matches").child(dataSnapshot.getKey()).setValue(true);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
     }
 
     public void GetPotentialMatches() {
