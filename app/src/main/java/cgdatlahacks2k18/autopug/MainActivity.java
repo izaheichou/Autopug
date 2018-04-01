@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private CardsArrayAdapter cardsArrayAdapter;
     ListView listView;
     List<Card> rowItems;  //  This replaces mPotentialMatchUids
+    private DatabaseReference usersDb;
+    private String currentUid;
 
     private int i;
     private FirebaseAuth mAuth;
@@ -35,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        usersDb = FirebaseDatabase.getInstance().getReference().child("users");
+
         mAuth = FirebaseAuth.getInstance();
+        currentUid = mAuth.getCurrentUser().getUid();
 
         rowItems = new ArrayList<>();
         cardsArrayAdapter = new CardsArrayAdapter(this, R.layout.item, rowItems);
@@ -54,26 +60,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLeftCardExit(Object dataObject) {  // TODO
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
+                Card card = (Card) dataObject;
+                String userId = card.getUserId();
+                usersDb.child(userId).child("Connections").child("No").child(currentUid).setValue(true);
                 Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-                final String userId = mAuth.getCurrentUser().getUid();
-                String gameName = getIntent().getStringExtra("gameName");  // use this as search pool name
-                final DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
-                        .child("searchPool").child(gameName).child("Individuals");
-                // TODO: Figure out how to register connections
-
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {  // TODO
+                Card card = (Card) dataObject;
+                String userId = card.getUserId();
+                usersDb.child(userId).child("Connections").child("Yes").child(currentUid).setValue(true);
                 Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-                final String userId = mAuth.getCurrentUser().getUid();
-                String gameName = getIntent().getStringExtra("gameName");  // use this as search pool name
-                final DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
-                        .child("searchPool").child(gameName).child("Individuals");
-                // TODO: Figure out how to register connections
             }
 
             @Override
@@ -121,7 +119,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("onChildAdded", "is called!!!");
-                if (dataSnapshot.exists()) {
+                Boolean notAlreadySeen = !dataSnapshot.child("Connections").child("Yes").hasChild(currentUid) &&
+                        !dataSnapshot.child("Connections").child("No").hasChild(currentUid);
+
+                if (dataSnapshot.exists() && notAlreadySeen) {
                     if (!userId.equals(dataSnapshot.getKey())) {
                         // TODO: check match, can implement score later
                         List<String> user2Roles = new ArrayList<>();
