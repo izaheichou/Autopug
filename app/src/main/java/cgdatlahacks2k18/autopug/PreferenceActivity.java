@@ -198,6 +198,7 @@ public class PreferenceActivity extends AppCompatActivity {
                         .child("users").child(userId).child("Games").child(overwatch.getName());
                 // currentUserDb.setValue(null);
                 currentUserDb.child("Bio").setValue(bio.getText().toString());
+                searchPoolDb.child("Bio").setValue(bio.getText().toString());
 
                 // searchPoolDb.setValue(null);
                 List<String> playerRoles = overwatch.getRoles();

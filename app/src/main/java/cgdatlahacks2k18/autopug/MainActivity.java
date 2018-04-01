@@ -131,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
                         if (checkRoles && modeMatch &&
                                 user1preferredPlatform.equals(user2platform)) {
-                            mPotentialMatchUids.add(dataSnapshot.getKey());
+                            //mPotentialMatchUids.add(dataSnapshot.getKey());
+                            mPotentialMatchUids.add(dataSnapshot.child("Bio").getValue().toString());
                             arrayAdapter.notifyDataSetChanged();
                         }
                     }
