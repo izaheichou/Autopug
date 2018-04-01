@@ -6,38 +6,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
-    public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders> {
-        private List<MatchesObject> matchesList;
-        private Context context;
+public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders> {
+    private List<MatchesObject> matchesList;
+    private Context context;
 
-        public MatchesAdapter(List <MatchesObject> matchesList, Context context)
-        {
-            this.matchesList = matchesList;
-            this.context = context;
-        }
+    public MatchesAdapter(List <MatchesObject> matchesList, Context context)
+    {
+        this.matchesList = matchesList;
+        this.context = context;
+    }
 
-        @Override
-        public MatchesViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public MatchesViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_matches, null, false);
-            RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutView.setLayoutParams(lp);
-            MatchesViewHolders rcv = new MatchesViewHolders(layoutView);
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_matches, null, false);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutView.setLayoutParams(lp);
+        MatchesViewHolders rcv = new MatchesViewHolders(layoutView);
 
-            return rcv;
-        }
+        return rcv;
+    }
 
-        @Override
-        public void onBindViewHolder(MatchesViewHolders holder, int position) {
-            holder.mMatchID.setText(matchesList.get(position).getUserID());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return matchesList.size();
+    @Override
+    public void onBindViewHolder(MatchesViewHolders holder, int position) {
+        holder.mMatchBattleTag.setText("BattleTag: " + matchesList.get(position).getBattleTag());
+        holder.mMatchName.setText(matchesList.get(position).getDisplayName());
+        if (!matchesList.get(position).getProfileImageUrl().equals("default")) {
+            Glide.with(context).load(matchesList.get(position).getProfileImageUrl()).into(holder.mMatchImage);
         }
     }
+
+    @Override
+    public int getItemCount() {
+        return matchesList.size();
+    }
+}
 
