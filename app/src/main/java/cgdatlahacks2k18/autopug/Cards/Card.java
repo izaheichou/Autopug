@@ -1,4 +1,4 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Cards;
 
 import java.util.List;
 

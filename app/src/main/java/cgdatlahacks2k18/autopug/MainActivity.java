@@ -20,6 +20,11 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgdatlahacks2k18.autopug.Cards.Card;
+import cgdatlahacks2k18.autopug.Cards.CardsArrayAdapter;
+import cgdatlahacks2k18.autopug.Games.Overwatch;
+import cgdatlahacks2k18.autopug.Matches.MatchesActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     // From tutorial

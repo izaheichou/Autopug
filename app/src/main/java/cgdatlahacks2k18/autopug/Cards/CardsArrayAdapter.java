@@ -1,4 +1,4 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Cards;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+
+import cgdatlahacks2k18.autopug.R;
 
 public class CardsArrayAdapter extends ArrayAdapter {
 

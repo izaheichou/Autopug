@@ -1,4 +1,4 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Matches;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+
+import cgdatlahacks2k18.autopug.R;
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders> {
     private List<MatchesObject> matchesList;

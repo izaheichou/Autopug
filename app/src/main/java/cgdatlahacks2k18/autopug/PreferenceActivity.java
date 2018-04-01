@@ -27,6 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgdatlahacks2k18.autopug.Games.GameTitle;
+import cgdatlahacks2k18.autopug.Games.Overwatch;
+
 public class PreferenceActivity extends AppCompatActivity {
 
     private ArrayAdapter<CharSequence> gameArrayAdapter;

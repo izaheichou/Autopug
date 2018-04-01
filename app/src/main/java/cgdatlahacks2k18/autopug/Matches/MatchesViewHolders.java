@@ -1,9 +1,11 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Matches;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import cgdatlahacks2k18.autopug.R;
 
 public class MatchesViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener{
 

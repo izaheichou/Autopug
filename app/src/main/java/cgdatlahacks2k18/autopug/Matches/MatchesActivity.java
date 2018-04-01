@@ -1,4 +1,4 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Matches;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,6 +14,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cgdatlahacks2k18.autopug.R;
 
 public class MatchesActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;

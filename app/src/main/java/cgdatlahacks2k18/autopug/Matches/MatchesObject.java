@@ -1,4 +1,4 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Matches;
 
 public class MatchesObject {
     private String userID, displayName, profileImageUrl, battleTag;

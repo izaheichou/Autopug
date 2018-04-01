@@ -1,4 +1,4 @@
-package cgdatlahacks2k18.autopug;
+package cgdatlahacks2k18.autopug.Games;
 
 import java.util.ArrayList;
 import java.util.HashMap;

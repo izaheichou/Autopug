@@ -23,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
+import cgdatlahacks2k18.autopug.Games.GameTitle;
+import cgdatlahacks2k18.autopug.Games.Overwatch;
+
 public class AddGameActivity extends AppCompatActivity {
 
     private ArrayAdapter<CharSequence> gameArrayAdapter;
