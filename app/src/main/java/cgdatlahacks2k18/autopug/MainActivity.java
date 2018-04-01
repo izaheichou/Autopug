@@ -142,10 +142,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("onChildAdded", "is called!!!");
-                Boolean notAlreadySeen = !dataSnapshot.child("Connections").child("Yes").hasChild(currentUid) &&
-                        !dataSnapshot.child("Connections").child("No").hasChild(currentUid);
 
-                if (dataSnapshot.exists() && notAlreadySeen) {
+                if (dataSnapshot.exists()) {
                     if (!userId.equals(dataSnapshot.getKey())) {
                         // TODO: check match, can implement score later
                         List<String> user2Roles = new ArrayList<>();
@@ -165,10 +163,18 @@ public class MainActivity extends AppCompatActivity {
                             otherUserDb.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String displayName = dataSnapshot.child("displayName").getValue(String.class);
-                                    String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
-                                    rowItems.add(new Card(dataSnapshot.getKey(), displayName, profileImageUrl));
-                                    cardsArrayAdapter.notifyDataSetChanged();
+                                    Boolean notAlreadySeen = !dataSnapshot.child("Connections").child("Yes").hasChild(currentUid) &&
+                                            !dataSnapshot.child("Connections").child("No").hasChild(currentUid);
+                                    if (notAlreadySeen) { // only add to cards if not seen yet
+                                        String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                                        String existingProfileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+                                        String profileImageUrl = "default";
+                                        if (!profileImageUrl.equals(existingProfileImageUrl)) {
+                                            profileImageUrl = existingProfileImageUrl;
+                                        }
+                                        rowItems.add(new Card(dataSnapshot.getKey(), displayName, profileImageUrl));
+                                        cardsArrayAdapter.notifyDataSetChanged();
+                                    }
                                 }
 
                                 @Override

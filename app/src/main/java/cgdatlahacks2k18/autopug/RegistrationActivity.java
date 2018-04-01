@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.DatabaseMetaData;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -81,11 +83,16 @@ public class RegistrationActivity extends AppCompatActivity {
                         } else {
                             String userId = mAuth.getCurrentUser().getUid();
                             DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
-                                    .child("users").child(userId).child("displayName");
-                            currentUserDb.setValue(displayName);
-                            currentUserDb = FirebaseDatabase.getInstance().getReference()
-                                    .child("users").child(userId).child("battleTag");
-                            currentUserDb.setValue(battleTag);
+                                    .child("users").child(userId);
+
+                            Map userInfo = new HashMap();
+                            userInfo.put("displayName", displayName);
+                            userInfo.put("battleTag", battleTag);
+                            userInfo.put("profileImageUrl", "default");
+
+                            currentUserDb.updateChildren(userInfo);
+
+
                         }
                     }
                 });

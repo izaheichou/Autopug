@@ -156,7 +156,14 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                     if (map.get("profileImageUrl") != null) {
                         profileImageUrl = map.get("profileImageUrl").toString();
-                        Glide.with(getApplication()).load(profileImageUrl).into(mProfileImage); // Glide does caching to prevent redundant downloads
+                        Glide.clear(mProfileImage);
+                        switch (profileImageUrl) {
+                            case "default":
+                                Glide.with(getApplication()).load(R.mipmap.ic_launcher).into(mProfileImage); // Glide does caching to prevent redundant downloads
+                                break;
+                            default:
+                                Glide.with(getApplication()).load(profileImageUrl).into(mProfileImage); // Glide does caching to prevent redundant downloads
+                        }
                     }
 
                 }
