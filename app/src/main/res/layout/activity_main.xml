@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cgdatlahacks2k18.autopug.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="cgdatlahacks2k18.autopug.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="logoutUser"
-            android:text="Sign Out" />
-
-        <Button
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="goToMatches"
-            android:text="Matches" />
-    </LinearLayout>
-
-
+        android:onClick="setPreference"
+        android:text="Start Search" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:onClick="logoutUser"/>
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/frame"
         android:background="#ffeee9e2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:rotation_degrees="15.5"
         tools:context=".MyActivity" />
 
-</LinearLayout>
+</android.widget.LinearLayout>

@@ -10,6 +10,9 @@ public interface GameTitle {
     List<String> getAllRoles();
     List<String> getModes();
     List<String> getAllModes();
+    List<String> getPlatforms();
+    List<String> getAllPlatforms();
     void setRole(String role, Boolean val);
     void setMode(String mode, Boolean val);
+    void setPlatform(String platform, Boolean val);
 }

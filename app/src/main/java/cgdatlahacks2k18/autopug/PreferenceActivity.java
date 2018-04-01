@@ -21,9 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AddGameActivity extends AppCompatActivity {
+public class PreferenceActivity extends AppCompatActivity {
 
     private ArrayAdapter<CharSequence> gameArrayAdapter;
     private FirebaseAuth mAuth;
@@ -31,7 +32,7 @@ public class AddGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_game);
+        setContentView(R.layout.activity_preference);
 
         mAuth = FirebaseAuth.getInstance();
         Spinner spinner = (Spinner) findViewById(R.id.gameslist_spinner);
@@ -44,7 +45,7 @@ public class AddGameActivity extends AppCompatActivity {
                 String selected = (String) adapterView.getItemAtPosition(i);
                 // generate game specific form here
                 if (selected.equals("Overwatch")) {
-                    generateOverwatchForm();
+                    generateOverwatchPreferenceForm();
                 }
             }
 
@@ -56,30 +57,33 @@ public class AddGameActivity extends AppCompatActivity {
 
     }
 
-    private void generateOverwatchForm() {
-        Log.d("addgameactivity", "generate overwatch form called");
+    private void generateOverwatchPreferenceForm() {
+        Log.d("addpreference", "generate overwatch preference form called");
         final GameTitle overwatch = new Overwatch();
+        final GameTitle overwatchTeam = new Overwatch();
         // generate check boxes
         List<String> roles = overwatch.getAllRoles();
         List<String> modes = overwatch.getAllModes();
         List<String> platforms = overwatch.getAllPlatforms();
-        final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_add_game);
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_preference);
+        final TextView teamRoleLabel = new TextView(this);
         final TextView roleLabel = new TextView(this);
         final TextView modeLabel = new TextView(this);
-        final TextView bioLabel = new TextView(this);
         final TextView platformLabel = new TextView(this);
         final RadioGroup platformGroup = new RadioGroup(this);
+        final RadioGroup modeGroup = new RadioGroup(this);
 
+        final TextView bioLabel = new TextView(this);
         final EditText bio = new EditText(this);
         bio.setHint("overwatch bio");
         InputFilter[] fArray = new InputFilter[1];
         fArray[0] = new InputFilter.LengthFilter(140);
         bio.setFilters(fArray);
 
-        roleLabel.setText("Select Role(s) You Play (You can change these anytime)");
-        modeLabel.setText("Select Mode(s) You Play (You can change these anytime)");
-        bioLabel.setText("Overwatch Specific Bio (max 140 chars)");
-        platformLabel.setText("Select your platforms");
+        teamRoleLabel.setText("Select Team Mate(s) You Prefer");
+        roleLabel.setText("Select Role(s) You Want Now");
+        modeLabel.setText("Select Mode You Want Now");
+        platformLabel.setText("Select Platform You Want Now");
 
         layout.addView(bioLabel,
                 new LinearLayout.LayoutParams(
@@ -90,12 +94,36 @@ public class AddGameActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        layout.addView(teamRoleLabel,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        for (String role : roles) {  // FOR TEAM!!!
+            final CheckBox rolebox = new CheckBox(this);
+            rolebox.setId(Overwatch.assignIdToString(role));
+            rolebox.setText(role);
+            rolebox.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View view) {
+                    boolean checked = ((CheckBox) view).isChecked();
+
+                    String valueString = Overwatch.idToString(view.getId());
+                    overwatchTeam.setRole(valueString, checked);
+                }
+            });
+            layout.addView(rolebox,
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+
+        // FOR CURRENT USER
         layout.addView(roleLabel,
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        for (String role : roles) {
+        for (String role : roles) {  // FOR TEAM!!!
             final CheckBox rolebox = new CheckBox(this);
             rolebox.setId(Overwatch.assignIdToString(role));
             rolebox.setText(role);
@@ -119,23 +147,21 @@ public class AddGameActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
         for (String mode : modes) {
-            final CheckBox modebox = new CheckBox(this);
-            modebox.setId(Overwatch.assignIdToString(mode));
-            modebox.setText(mode);
-            modebox.setOnClickListener(new View.OnClickListener() {
-                public void onClick (View view) {
-                    boolean checked = ((CheckBox) view).isChecked();
-
-                    String valueString = Overwatch.idToString(view.getId());
-                    overwatch.setMode(valueString, checked);
-                }
-            });
-            layout.addView(modebox,
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
+            final RadioButton modebtn = new RadioButton(this);
+            modebtn.setId(Overwatch.assignIdToString(mode));  // TODO: set this id, needs to be used on onclick
+            modebtn.setText(mode);
+            modeGroup.addView(modebtn,
+                    new RadioGroup.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
         }
 
+        layout.addView(modeGroup,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        // FOR PLATFORM!!
         layout.addView(platformLabel,
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -157,28 +183,41 @@ public class AddGameActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
         final Button submitBtn = new Button(this);
-        submitBtn.setText("Submit");
+        submitBtn.setText("Start Search");
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                int platformId = platformGroup.getCheckedRadioButtonId();
+                int modeId = modeGroup.getCheckedRadioButtonId();
+                String playerPlatform = Overwatch.idToString(platformId);
+                String playerMode = Overwatch.idToString(modeId);
                 String userId = mAuth.getCurrentUser().getUid();
+                DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
+                        .child("searchPool").child(overwatch.getName()).child("Individuals").child(userId);
+
                 DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
                         .child("users").child(userId).child("Games").child(overwatch.getName());
-                currentUserDb.setValue(null);
+                // currentUserDb.setValue(null);
                 currentUserDb.child("Bio").setValue(bio.getText().toString());
-                List<String> playerRoles = overwatch.getRoles();
-                for (String role : playerRoles) {
-                    currentUserDb.child("Roles").push().setValue(role);
-                }
-                List<String> playerModes = overwatch.getModes();
-                for (String mode : playerModes) {
-                    currentUserDb.child("Modes").push().setValue(mode);
-                }
-                List<String> playerPlatforms = overwatch.getPlatforms();
-                for (String platform : playerPlatforms) {
-                    currentUserDb.child("Platforms").push().setValue(platform);
-                }
 
-                Intent intent = new Intent(AddGameActivity.this, MainActivity.class);  // TODO: finalize next page
+                // searchPoolDb.setValue(null);
+                List<String> playerRoles = overwatch.getRoles();
+                searchPoolDb.child("roles").setValue(null);
+                for (String role : playerRoles) {
+                    searchPoolDb.child("roles").push().setValue(role);
+                }
+                List<String> teamRoles = overwatchTeam.getRoles();
+                searchPoolDb.child("teamRoles").setValue(null);
+                for (String role : teamRoles) {
+                    searchPoolDb.child("teamRoles").push().setValue(role);
+                }
+                searchPoolDb.child("preferredMode").setValue(playerMode);
+                searchPoolDb.child("platform").setValue(playerPlatform);
+
+                Intent intent = new Intent(PreferenceActivity.this, MainActivity.class);  // TODO: finalize next page
+                intent.putExtra("gameName", overwatch.getName());
+                intent.putExtra("user1Platform", playerPlatform);
+                intent.putStringArrayListExtra("user1TeamRoles", (ArrayList<String>) teamRoles);
+                intent.putExtra("user1Mode", playerMode);
                 startActivity(intent);
                 finish();
                 return;
@@ -186,8 +225,8 @@ public class AddGameActivity extends AppCompatActivity {
         });
         layout.addView(submitBtn,
                 new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
 

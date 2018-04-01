@@ -42,8 +42,8 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {  // user is logged in, can move to next page
-                    // TODO: change to AddGameActivity in second param.
-                    Intent intent = new Intent(RegistrationActivity.this, AddGameActivity.class);
+                    // TODO: change to AddGameActivity in second param. OR NOT
+                    Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                     return;
