@@ -8,6 +8,7 @@ import java.util.Map;
 public class Overwatch implements GameTitle {
     private String mName = "Overwatch";
     private String mBio;
+    private Integer mMaxPartySize = 6;
     private Map<String, Boolean> mRoles;  // DPS, Healer, Tank, Defense, Symmetra, Any
     private Map<String, Boolean> mModes;  // pick from Ranked, Casual, Arcade, Custom, Any
     private Map<String, Boolean> mPlatforms;  // PS4, PC, XBONE
@@ -125,6 +126,9 @@ public class Overwatch implements GameTitle {
 
     public String getBio() {
         return mBio;
+    }
+    public Integer getMaxPartySize() {
+        return mMaxPartySize;
     }
 
     public void setBio(String bio) {

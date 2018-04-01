@@ -12,6 +12,7 @@ public interface GameTitle {
     List<String> getAllModes();
     List<String> getPlatforms();
     List<String> getAllPlatforms();
+    Integer getMaxPartySize();
     void setRole(String role, Boolean val);
     void setMode(String mode, Boolean val);
     void setPlatform(String platform, Boolean val);
