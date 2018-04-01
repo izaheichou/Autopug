@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PreferenceActivity extends AppCompatActivity {
@@ -57,25 +60,72 @@ public class PreferenceActivity extends AppCompatActivity {
     private void generateOverwatchPreferenceForm() {
         Log.d("addpreference", "generate overwatch preference form called");
         final GameTitle overwatch = new Overwatch();
+        final GameTitle overwatchTeam = new Overwatch();
         // generate check boxes
         List<String> roles = overwatch.getAllRoles();
         List<String> modes = overwatch.getAllModes();
+        List<String> platforms = overwatch.getAllPlatforms();
         final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_preference);
+        final TextView teamRoleLabel = new TextView(this);
         final TextView roleLabel = new TextView(this);
         final TextView modeLabel = new TextView(this);
+        final TextView platformLabel = new TextView(this);
+        final RadioGroup platformGroup = new RadioGroup(this);
+        final RadioGroup modeGroup = new RadioGroup(this);
 
-        roleLabel.setText("Select Team Role(s) You Prefer");
-        modeLabel.setText("Select Mode(s) You Prefer");
+        final TextView bioLabel = new TextView(this);
+        final EditText bio = new EditText(this);
+        bio.setHint("overwatch bio");
+        InputFilter[] fArray = new InputFilter[1];
+        fArray[0] = new InputFilter.LengthFilter(140);
+        bio.setFilters(fArray);
 
+        teamRoleLabel.setText("Select Team Mate(s) You Prefer");
+        roleLabel.setText("Select Role(s) You Want Now");
+        modeLabel.setText("Select Mode You Want Now");
+        platformLabel.setText("Select Platform You Want Now");
+
+        layout.addView(bioLabel,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+        layout.addView(bio,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        layout.addView(teamRoleLabel,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        for (String role : roles) {  // FOR TEAM!!!
+            final CheckBox rolebox = new CheckBox(this);
+            rolebox.setId(Overwatch.assignIdToString(role));
+            rolebox.setText(role);
+            rolebox.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View view) {
+                    boolean checked = ((CheckBox) view).isChecked();
+
+                    String valueString = Overwatch.idToString(view.getId());
+                    overwatchTeam.setRole(valueString, checked);
+                }
+            });
+            layout.addView(rolebox,
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+
+        // FOR CURRENT USER
         layout.addView(roleLabel,
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        for (String role : roles) {
+        for (String role : roles) {  // FOR TEAM!!!
             final CheckBox rolebox = new CheckBox(this);
             rolebox.setId(Overwatch.assignIdToString(role));
-            // TODO: Layout params??
             rolebox.setText(role);
             rolebox.setOnClickListener(new View.OnClickListener() {
                 public void onClick (View view) {
@@ -97,45 +147,77 @@ public class PreferenceActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
         for (String mode : modes) {
-            final CheckBox modebox = new CheckBox(this);
-            modebox.setId(Overwatch.assignIdToString(mode));  // TODO: set this id, needs to be used on onclick
-            // TODO: Layout params??
-            modebox.setText(mode);
-            modebox.setOnClickListener(new View.OnClickListener() {
-                public void onClick (View view) {
-                    boolean checked = ((CheckBox) view).isChecked();
-
-                    String valueString = Overwatch.idToString(view.getId());
-                    overwatch.setMode(valueString, checked);
-                }
-            });
-            layout.addView(modebox,
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
+            final RadioButton modebtn = new RadioButton(this);
+            modebtn.setId(Overwatch.assignIdToString(mode));  // TODO: set this id, needs to be used on onclick
+            modebtn.setText(mode);
+            modeGroup.addView(modebtn,
+                    new RadioGroup.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
         }
 
+        layout.addView(modeGroup,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        // FOR PLATFORM!!
+        layout.addView(platformLabel,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        for (String platform : platforms) {
+            final RadioButton platbtn = new RadioButton(this);
+            platbtn.setId(Overwatch.assignIdToString(platform));  // TODO: set this id, needs to be used on onclick
+            platbtn.setText(platform);
+            platformGroup.addView(platbtn,
+                    new RadioGroup.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+
+        layout.addView(platformGroup,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
         final Button submitBtn = new Button(this);
         submitBtn.setText("Start Search");
-        // submitBtn.setId(69);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                int platformId = platformGroup.getCheckedRadioButtonId();
+                int modeId = modeGroup.getCheckedRadioButtonId();
+                String playerPlatform = Overwatch.idToString(platformId);
+                String playerMode = Overwatch.idToString(modeId);
                 String userId = mAuth.getCurrentUser().getUid();
                 DatabaseReference searchPoolDb = FirebaseDatabase.getInstance().getReference()
                         .child("searchPool").child(overwatch.getName()).child("Individuals").child(userId);
-                searchPoolDb.setValue(null);
-                List<String> playerRoles = overwatch.getRoles();
-                for (String role : playerRoles) {
-                    searchPoolDb.child("preferredRoles").push().setValue(role);
-                }
-                List<String> playerModes = overwatch.getModes();
-                for (String mode : playerModes) {
-                    searchPoolDb.child("preferredModes").push().setValue(mode);
-                }
 
-                // TODO: go to next page
+                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference()
+                        .child("users").child(userId).child("Games").child(overwatch.getName());
+                // currentUserDb.setValue(null);
+                currentUserDb.child("Bio").setValue(bio.getText().toString());
+
+                // searchPoolDb.setValue(null);
+                List<String> playerRoles = overwatch.getRoles();
+                searchPoolDb.child("roles").setValue(null);
+                for (String role : playerRoles) {
+                    searchPoolDb.child("roles").push().setValue(role);
+                }
+                List<String> teamRoles = overwatchTeam.getRoles();
+                searchPoolDb.child("teamRoles").setValue(null);
+                for (String role : teamRoles) {
+                    searchPoolDb.child("teamRoles").push().setValue(role);
+                }
+                searchPoolDb.child("preferredMode").setValue(playerMode);
+                searchPoolDb.child("platform").setValue(playerPlatform);
 
                 Intent intent = new Intent(PreferenceActivity.this, MainActivity.class);  // TODO: finalize next page
+                intent.putExtra("gameName", overwatch.getName());
+                intent.putExtra("user1Platform", playerPlatform);
+                intent.putStringArrayListExtra("user1TeamRoles", (ArrayList<String>) teamRoles);
+                intent.putExtra("user1Mode", playerMode);
                 startActivity(intent);
                 finish();
                 return;

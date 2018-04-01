@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -66,6 +68,7 @@ public class AddGameActivity extends AppCompatActivity {
         final TextView modeLabel = new TextView(this);
         final TextView bioLabel = new TextView(this);
         final TextView platformLabel = new TextView(this);
+        final RadioGroup platformGroup = new RadioGroup(this);
 
         final EditText bio = new EditText(this);
         bio.setHint("overwatch bio");
@@ -139,26 +142,22 @@ public class AddGameActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
         for (String platform : platforms) {
-            final CheckBox platbox = new CheckBox(this);
-            platbox.setId(Overwatch.assignIdToString(platform));
-            platbox.setText(platform);
-            platbox.setOnClickListener(new View.OnClickListener() {
-                public void onClick (View view) {
-                    boolean checked = ((CheckBox) view).isChecked();
-
-                    String valueString = Overwatch.idToString(view.getId());
-                    overwatch.setPlatform(valueString, checked);
-                }
-            });
-            layout.addView(platbox,
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
+            final RadioButton platbtn = new RadioButton(this);
+            platbtn.setId(Overwatch.assignIdToString(platform));  // TODO: set this id, needs to be used on onclick
+            platbtn.setText(platform);
+            platformGroup.addView(platbtn,
+                    new RadioGroup.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
         }
 
+        layout.addView(platformGroup,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
         final Button submitBtn = new Button(this);
         submitBtn.setText("Submit");
-        // submitBtn.setId(69);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String userId = mAuth.getCurrentUser().getUid();
