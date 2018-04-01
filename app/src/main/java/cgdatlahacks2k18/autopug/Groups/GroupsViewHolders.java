@@ -22,9 +22,8 @@ public class GroupsViewHolders extends RecyclerView.ViewHolder implements View.O
     }
 
     @Override
-    public void onClick(View view)
-    {
-
+    public void onClick(View view) {
+        // TODO
     }
 
 }

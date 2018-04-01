@@ -1,10 +1,9 @@
 package cgdatlahacks2k18.autopug.Groups;
 
-public class GroupsObject {
+public class GroupMemberObject {
     private String userID, displayName, profileImageUrl, battleTag;
 
-    public GroupsObject(String userID, String displayName, String profileImageUrl, String battleTag)
-    {
+    public GroupMemberObject(String userID, String displayName, String profileImageUrl, String battleTag) {
         this.userID = userID;
         this.displayName = displayName;
         this.profileImageUrl = profileImageUrl;

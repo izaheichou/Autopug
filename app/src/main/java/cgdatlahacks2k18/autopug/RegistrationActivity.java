@@ -89,10 +89,10 @@ public class RegistrationActivity extends AppCompatActivity {
                             userInfo.put("displayName", displayName);
                             userInfo.put("battleTag", battleTag);
                             userInfo.put("profileImageUrl", "default");
+                            currentUserDb.child("Games").child("Overwatch").child("currentGroup")
+                                    .child("groupId").setValue("");
 
                             currentUserDb.updateChildren(userInfo);
-
-
                         }
                     }
                 });

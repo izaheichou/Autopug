@@ -24,7 +24,7 @@
         <activity android:name=".Matches.MatchesActivity" />
         <activity android:name=".PreferenceActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".ManageGroupActivity"></activity>
+        <activity android:name=".Groups.ManageGroupActivity"></activity>
     </application>
 
 </manifest>

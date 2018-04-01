@@ -23,6 +23,7 @@ import java.util.List;
 import cgdatlahacks2k18.autopug.Cards.Card;
 import cgdatlahacks2k18.autopug.Cards.CardsArrayAdapter;
 import cgdatlahacks2k18.autopug.Games.Overwatch;
+import cgdatlahacks2k18.autopug.Groups.ManageGroupActivity;
 import cgdatlahacks2k18.autopug.Matches.MatchesActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -112,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void isConnectionMatch(String userId) {  // userId is the one tied to the CARD
+    private void isConnectionMatch(final String userId) {  // userId is the one tied to the CARD
         // Check currentUser's connections - if userId exists under Connections - Yes
-        DatabaseReference currentUserConnectionsDb = usersDb.child(currentUid).child("Games")
+        final DatabaseReference currentUserConnectionsDb = usersDb.child(currentUid).child("Games")
                 .child("Overwatch").child("Connections")
                 .child("Yes").child(userId);
         currentUserConnectionsDb.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -137,6 +138,87 @@ public class MainActivity extends AppCompatActivity {
                     // add individual to team by assigning
                     // their groupId as existing group's and adding user's id to groups -> groupid
                     // if group full, remove from pool
+
+                    // TODO: temp implementation - currentUserId and userId is other user
+                    final DatabaseReference currentUserCurrentGroupDb =
+                            FirebaseDatabase.getInstance().getReference().child("users")
+                            .child(currentUid).child("Games").child("Overwatch")
+                            .child("currentGroup");
+
+                    currentUserCurrentGroupDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                final String currUserGroupId = dataSnapshot.child("groupId").getValue(String.class);
+                                if (!currUserGroupId.isEmpty()) {
+                                    // add other user to group if their group id is null
+                                    Log.d("currUserGroup", "is called!!!");
+                                    final DatabaseReference otherUserCurrentGroupDb =
+                                            FirebaseDatabase.getInstance().getReference().child("users")
+                                                    .child(userId).child("Games").child("Overwatch")
+                                                    .child("currentGroup");
+                                    otherUserCurrentGroupDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                Log.d("OTHERUserGroup", "is called!!!");
+                                                String otherUserGroupId = dataSnapshot.child("groupId").getValue(String.class);
+                                                if (otherUserGroupId.isEmpty()) {
+                                                    DatabaseReference membersDb = FirebaseDatabase.getInstance().getReference()
+                                                            .child("groups").child(currUserGroupId).child("Members");
+                                                    membersDb.push().setValue(userId);
+                                                    otherUserCurrentGroupDb.child("groupId").setValue(currUserGroupId);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                } else {  // current user's group id is null
+                                    // add current user to group if other group id is null
+                                    final DatabaseReference otherUserCurrentGroupDb =
+                                            FirebaseDatabase.getInstance().getReference().child("users")
+                                                    .child(userId).child("Games").child("Overwatch")
+                                                    .child("currentGroup");
+                                    otherUserCurrentGroupDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                String otherUserGroupId = dataSnapshot.child("groupId").getValue(String.class);
+                                                if (!otherUserGroupId.isEmpty()) {
+                                                    DatabaseReference membersDb = FirebaseDatabase.getInstance().getReference()
+                                                            .child("groups").child(otherUserGroupId).child("Members");
+                                                    membersDb.push().setValue(currentUid);
+                                                    currentUserCurrentGroupDb.child("groupId").setValue(otherUserGroupId);
+                                                } else { // other user's group also null
+                                                    // create new group under groups
+                                                    Log.d("Last else", "is called!!!");
+                                                    DatabaseReference groupsDb = FirebaseDatabase.getInstance().getReference()
+                                                            .child("groups");
+                                                    DatabaseReference newGroupDb = groupsDb.push();
+                                                    newGroupDb.child("Members").push().setValue(currentUid);
+                                                    newGroupDb.child("Members").push().setValue(userId);
+                                                    currentUserCurrentGroupDb.child("groupId").setValue(newGroupDb.getKey());
+                                                    otherUserCurrentGroupDb.child("groupId").setValue(newGroupDb.getKey());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) { }
+                                    });
+                                }
+                            } else {
+                                Log.d("curruserdb", "SNAPSHOT DOESNT EXIST");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) { }
+                    });
 
                     usersDb.child(dataSnapshot.getKey()).child("Games").child("Overwatch").
                             child("Connections").child("Matches").child(currentUid).setValue(true);
