@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
             public void onLeftCardExit(Object dataObject) {  // TODO
                 Card card = (Card) dataObject;
                 String userId = card.getUserId();
-                usersDb.child(userId).child("Connections").child("No").child(currentUid).setValue(true);
+                usersDb.child(userId).child("Games").child("Overwatch").child("Connections")
+                        .child("No").child(currentUid).setValue(true);
                 // Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
@@ -70,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
             public void onRightCardExit(Object dataObject) {  // TODO
                 Card card = (Card) dataObject;
                 String userId = card.getUserId();
-                usersDb.child(userId).child("Connections").child("Yes").child(currentUid).setValue(true);
+                usersDb.child(userId).child("Games").child("Overwatch").child("Connections")
+                        .child("Yes").child(currentUid).setValue(true);
                 isConnectionMatch(userId);
                 // Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void isConnectionMatch(String userId) {  // userId is the one tied to the CARD
         // Check currentUser's connections - if userId exists under Connections - Yes
-        DatabaseReference currentUserConnectionsDb = usersDb.child(currentUid).child("Connections")
+        DatabaseReference currentUserConnectionsDb = usersDb.child(currentUid).child("Games")
+                .child("Overwatch").child("Connections")
                 .child("Yes").child(userId);
         currentUserConnectionsDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -115,8 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 // snapshot is Yes branch for CURRENT USER, whoever just swiped right i guess?
                 if (dataSnapshot.exists()) {
                     Toast.makeText(MainActivity.this, "Match made!", Toast.LENGTH_LONG).show();
-                    usersDb.child(dataSnapshot.getKey()).child("Connections").child("Matches").child(currentUid).setValue(true);
-                    usersDb.child(currentUid).child("Connections").child("Matches").child(dataSnapshot.getKey()).setValue(true);
+                    // TODO: I just realized this isn't game specific but we only have OW rn soooooo
+                    usersDb.child(dataSnapshot.getKey()).child("Games").child("Overwatch").
+                            child("Connections").child("Matches").child(currentUid).setValue(true);
+                    usersDb.child(currentUid).child("Games").child("Overwatch").child("Connections")
+                            .child("Matches").child(dataSnapshot.getKey()).setValue(true);
                 }
 
             }
@@ -168,8 +174,14 @@ public class MainActivity extends AppCompatActivity {
                             otherUserDb.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Boolean notAlreadySeen = !dataSnapshot.child("Connections").child("Yes").hasChild(currentUid) &&
-                                            !dataSnapshot.child("Connections").child("No").hasChild(currentUid);
+                                    Boolean notAlreadySeen =
+                                            !dataSnapshot.child("Games").child("Overwatch")
+                                                    .child("Connections").child("Yes")
+                                                    .hasChild(currentUid)
+                                                    &&
+                                            !dataSnapshot.child("Games").child("Overwatch")
+                                                    .child("Connections").child("No")
+                                                    .hasChild(currentUid);
                                     if (notAlreadySeen) { // only add to cards if not seen yet
                                         String displayName = dataSnapshot.child("displayName").getValue(String.class);
                                         String existingProfileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
